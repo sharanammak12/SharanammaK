@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeny Ticket Booking</title>
+    <link rel="icon" href=" train1.png" type="png">
+    <style>
+        body {
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background-color: #2a9d8f;
+        }
+
+        .admin-login, .admin-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .admin-login input {
+            width: 80%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background-color: green;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkgreen;
+        }
+
+        #report-output {
+            font-size: large;
+        }
+
+        h2 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Form -->
+    <div class="admin-login" id="admin-login">
+        <h2>Admin Login</h2>
+        <input type="text" id="admin-username" placeholder="Username" required>
+        <input type="password" id="admin-password" placeholder="Password" required>
+        <button onclick="validateAdmin()">Login</button>
+        <p id="login-error" style="color: red; display: none;">Invalid credentials, please try again.</p>
+    </div>
+
+    <!-- Admin Reports Section -->
+    <div class="admin-container" id="admin-container" style="display: none;">
+        <h2>Admin Reports and Analytics</h2>
+        <button class="generate-report-button" onclick="generateReport()">Generate Ticket Sales Report</button>
+        <div id="report-output"></div>
+    </div>
+
+    <script>
+        function validateAdmin() {
+            const username = document.getElementById("admin-username").value;
+            const password = document.getElementById("admin-password").value;
+            const loginError = document.getElementById("login-error");
+
+            if (username === "admin" && password === "admin") {
+                // Hide login form and show admin section
+                document.getElementById("admin-login").style.display = "none";
+                document.getElementById("admin-container").style.display = "block";
+            } else {
+                // Show error message
+                loginError.style.display = "block";
+            }
+        }
+
+        function generateReport() {
+            const bookingList = JSON.parse(localStorage.getItem("bookingList")) || [];
+            const reportOutput = document.getElementById("report-output");
+            let totalRevenue = 0;
+            let totalTicketsSold = 0;
+
+            bookingList.forEach(booking => {
+                totalRevenue += parseFloat(booking.amount) || 0;
+                totalTicketsSold += booking.seats ? booking.seats.split(", ").length : 0;
+            });
+
+            reportOutput.innerHTML = `
+                <p>Total Tickets Sold: ${totalTicketsSold}</p>
+                <p>Total Revenue: $${totalRevenue.toFixed(2)}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

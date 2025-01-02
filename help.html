@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Greeny Ticket Booking</title>
+    <link rel="icon" href=" train1.png" type="png">
+  
+</head>
+<style>
+    body{
+
+        background-color: #a9ded8;
+        margin: 0px 0px;
+    }
+    .box1{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        font-size: smaller;
+      
+      
+    }
+    .box2{
+
+        width:50%;
+    }
+    button{
+        background-color: aqua;
+        color: black;
+        padding: 12px 12px;
+        border-radius: 10px;
+    }
+    input{
+        height: 1cm;
+        width:8cm;
+        border-radius: 10px;
+    }
+</style>
+
+<body>
+    <h1> How can I help you?</h1>
+    <div class="box1">
+    <div class="box2">
+        <h4>Book Train Tickets Without Any Hassle</h4>
+        <p>Traveling by train is a popular choice for both short commutes and longer journeys, and for a good reason.
+            With over a thousand routes connecting cities in India, traveling by train is the most convenient mode of
+            travel. The combination of price, convenience, and speed makes train travel a sweet spot for discerning
+            travelers. Travelers can now search routes, check fares and book train tickets with MakeMyTrip’s train
+            booking system. Moreover, you can also use the MakeMyTrip’s app for easy access to train tickets booking.
+            Planning a trip across India should be fun and easy. That’s why, MakeMyTrip guarantees a hassle-free booking
+            process for booking your train tickets. You can have your train tickets book on MakeMyTrip from the comfort
+            of your homes.</p><hr />
+    </div>
+
+
+    <div class="box2">
+        <h4>How Book Train Tickets Online with Greeny</h4>
+        <p>Having confusion on how to book your train tickets online? process of booking your tickets in simple easy
+            steps.
+            Step 1: Log in to our website and select the train icon. Under the ‘book train tickets’ section, choose your
+            city and its station where you will depart from and arrive at.
+
+            Step 2: Then select the date of departure and choose from the preferred class of train travel. You can
+            choose between Sleeper Class, Third Class, First AC, Second AC, Third AC, AC Chair car, and so on. Remember,
+            while you book train tickets, the train fare varies according to the class of travel you choose.
+
+            Step 3: You can now see all the updated train details with their schedule and availability. You can filter
+            out by pricing, departure time, date, travel class, train types, and even stations.
+
+            Step 4: Once you choose your desired train, you now reach the review page where you can fill up your
+            details, berth preference, and also check the booking details and total amount. You can also avail free
+            cancellation policy and travel insurance exclusive available on MakeMyTrip.
+
+            Step 5: To proceed further, you will need to put your IRCTC login details. If you don’t have your IRCTC
+            username, you can always create a new one by adding the details.
+
+            Step 6: The final step is to add coupon codes (if you have any) and proceed to pay. After selecting the mode
+            of payment, you will be redirected to IRCTC for authentication. All you need to do is type in your password
+            and have your tickets delivered to your mailbox.</p>
+            <hr />
+    </div>
+</div>
+
+<div class="box1">
+    <div class="box2">
+        <h4>Why should you book Train Tickets with Greeny
+        </h4>
+        <p>Having confusion on how to book your train tickets online? process of booking your tickets in simple easy
+            steps.
+            Step 1: Log in to our website and select the train icon. Under the ‘book train tickets’ section, choose your
+            city and its station where you will depart from and arrive at.
+
+            Step 2: Then select the date of departure and choose from the preferred class of train travel. You can
+            choose between Sleeper Class, Third Class, First AC, Second AC, Third AC, AC Chair car, and so on. Remember,
+            while you book train tickets, the train fare varies according to the class of travel you choose.
+
+            Step 3: You can now see all the updated train details with their schedule and availability. You can filter
+            out by pricing, departure time, date, travel class, train types, and even stations.
+
+            Step 4: Once you choose your desired train, you now reach the review page where you can fill up your
+            details, berth preference, and also check the booking details and total amount. You can also avail free
+            cancellation policy and travel insurance exclusive available on MakeMyTrip.
+
+            Step 5: To proceed further, you will need to put your IRCTC login details. If you don’t have your IRCTC
+            username, you can always create a new one by adding the details.
+
+            Step 6: The final step is to add coupon codes (if you have any) and proceed to pay. After selecting the mode
+            of payment, you will be redirected to IRCTC for authentication. All you need to do is type in your password
+            and have your tickets delivered to your mailbox.</p><hr />
+    </div>
+
+    
+    <div class="box2">
+        <h4>How many people can I book in a single train ticket booking?</h4>
+        <p>A. In one IRCTC ticket booking, there can be a maximum of only six passengers. You can easily add the names
+            and ages of the ones along with whom you are travelling. By hitting on the edit button next to the names,
+            choose each passenger's berth preference. You can also add the other passenger's meal choices on the app.
+            Along with that you also have a few options when it comes to train reservations of six people in a single
+            ticket. You can choose to book when all the berths are in the same coach or if only one or two lower berths
+            are provided.</p><hr />
+    </div>
+</div>
+<div>+91 7864623045</div>
+<div>greenyticket@gmail.com</div>
+<input type="text" id="userInput" placeholder="Enter your message here"></input>
+<button onclick="submitInput()">Submit</button>
+
+
+
+
+
+
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+            // Define the submitInput function
+            window.submitInput = function() {
+                const userInput = document.getElementById('userInput').value;  // Get the value from input field
+
+                // Check if the input is not empty
+                if (userInput.trim() === "") {
+                    alert("Please enter a valid message.");
+                    return;
+                }
+
+                // Send the data to the backend using a POST request
+                fetch('/api/storeInput', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userInput: userInput })  // Send the input value to backend
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Input saved successfully!");
+                    } else {
+                        alert("Error saving input.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error saving input.");
+                });
+            };
+        });
+</script>
+</body>
+
+
+</html>

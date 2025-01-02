@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeny Ticket Booking-Ticket generation</title>
+    <link rel="icon" href=" train1.png" type="png">
+</head>
+<style>
+    body{
+        background-color: #f0f4f8;
+    }
+input{
+    margin-top: 12px;
+    width:8cm;
+    border-radius: 4px;
+    height: 1cm;
+}
+button{
+    margin-top: 15px;
+    padding: 12px 12px;
+    background-color: green;
+    border-radius: 12px;
+}
+#ticket{
+    margin-top: 12px ;
+    border: 3px solid black;
+    font-size:xx-large;
+    width: fit-content;
+    padding: 12px 12px;
+}
+</style>
+
+<body>
+    <h1>Generate Your Ticket</h1>
+    <div>
+        <input type="text" placeholder="enter your name" id="in1">
+        <small id="errorName" style="color: red; display: none;">Please enter a valid name</small>
+    </div>
+
+    <div>
+        <input type="text" placeholder="enter your address" id="in2">
+        <small id="errorAddress" style="color: red; display: none;">Please enter a valid address</small>
+    </div>
+
+    <div>
+        <input type="text" placeholder="enter your contact number" id="in3">
+        <small id="errorContact" style="color: red; display: none;">Please enter a valid contact number (10 digits)</small>
+
+    </div>
+
+    <div>
+        <input type="text" placeholder="enter age" id="in4">
+        <small id="errorAge" style="color: red; display: none;">Please enter a valid age (1-100)</small>
+    </div>
+
+    <div>
+        <button onclick="validateAndSubmit()">Submit</button>
+ 
+
+    </div>
+   
+    <div id="ticket">
+    <div id="heading"></div>
+    <div id="name"></div>
+    <div id="add"></div>
+    <div id="num"></div>
+    <div id="age"></div>
+    <div id="bid"></div>
+    <div id="to"></div>
+    <div id="from"></div>
+    <div id="date"></div>
+    <div id="time"></div>
+    <div id="booked-seats-display"></div>
+    <div id="amount"></div>
+   
+</div>
+    
+
+
+
+
+
+
+    <script>
+ function validateAndSubmit() {
+            // Get values from inputs
+            const name = document.querySelector('#in1').value.trim();
+            const address = document.querySelector('#in2').value.trim();
+            const contactNumber = document.querySelector('#in3').value.trim();
+            const age = document.querySelector('#in4').value.trim();
+
+            let isValid = true;
+
+            // Name validation
+            if (!name || name.length < 3) {
+                document.getElementById('errorName').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('errorName').style.display = 'none';
+            }
+
+            // Address validation
+            if (!address || address.length < 5) {
+                document.getElementById('errorAddress').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('errorAddress').style.display = 'none';
+            }
+
+            // Contact number validation
+            const phoneRegex = /^[0-9]{10}$/;
+            if (!contactNumber.match(phoneRegex)) {
+                document.getElementById('errorContact').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('errorContact').style.display = 'none';
+            }
+
+            // Age validation
+            const ageNumber = parseInt(age, 10);
+            if (!age || isNaN(ageNumber) || ageNumber < 1 || ageNumber > 100) {
+                document.getElementById('errorAge').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('errorAge').style.display = 'none';
+            }
+
+            // If all fields are valid, submit the form
+            if (isValid) {
+                fun1();
+            } else {
+                alert("Please fix the errors in the form before submitting.");
+            }
+        }
+
+
+function sendEmail() {
+    // Retrieve ticket details from the page
+    const name = document.querySelector('#in1').value;
+    const address = document.querySelector('#in2').value;
+    const contactNumber = document.querySelector('#in3').value;
+    const age = document.querySelector('#in4').value;
+    
+    const fromStation = localStorage.getItem("fromStation");
+    const toStation = localStorage.getItem("toStation");
+    const travelDate = localStorage.getItem("travelDate");
+    // const departureTime = localStorage.getItem("departureTime");
+    const totalAmount = localStorage.getItem("totalAmount");
+    const bookingId = localStorage.getItem("bookingId");
+    const trainTime = localStorage.getItem("trainTime");
+    const userEmail= localStorage.getItem("userEmail");
+    const bookingHistory = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+    const mostRecentBooking = bookingHistory[bookingHistory.length - 1];
+    let bookedSeats = mostRecentBooking ? mostRecentBooking.seats : '';
+    // const userEmail = "02fe22bcs148@kletech.ac.in"; 
+    if (typeof bookedSeats === 'string') {
+        bookedSeats = bookedSeats.split(',').map(seat => seat.trim());
+    }
+
+    if (!userEmail) {
+        alert("Email address not found in localStorage. Cannot send the ticket.");
+        return;
+    }
+
+
+    // Prepare the data to send to the backend
+    const emailData = {
+        name: name,
+        address: address,
+        contactNumber: contactNumber,
+        age: age,
+        fromStation: fromStation,
+        toStation: toStation,
+        travelDate: travelDate,
+        departureTime: trainTime,
+        totalAmount: totalAmount,
+        bookingId: bookingId,
+        bookedSeats: Array.isArray(bookedSeats) ? bookedSeats.join(", ") : "No seats booked",
+        userEmail: userEmail
+    };
+
+    // Make the POST request to the backend to send the email
+    fetch('/api/sendTicketEmail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Email sent successfully!");
+        } else {
+            alert("Failed to send email. Please try again later.");
+        }
+    })
+    .catch(error => {
+        console.error("Error sending email:", error);
+        alert("An error occurred while sending the email.");
+    });
+
+
+     // Prepare the data for storage
+     const ticketData = {
+        name: name,
+        address: address,
+        contactNumber: contactNumber,
+        age: parseInt(age, 10),
+        fromStation: fromStation,
+        toStation: toStation,
+        travelDate: travelDate,
+        departureTime: trainTime,
+        totalAmount: totalAmount,
+        bookingId: bookingId,
+        bookedSeats: Array.isArray(bookedSeats) ? bookedSeats.join(", ") : "No seats booked",
+        userEmail: userEmail,
+    };
+
+    // Send the data to the backend
+    fetch('/api/saveTicket', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ticketData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Ticket saved and email sent successfully!");
+        } else {
+            alert("Failed to save ticket. Please try again.");
+        }
+    })
+    .catch(error => {
+        console.error("Error saving ticket:", error);
+        alert("An error occurred while saving the ticket.");
+    });
+
+}
+
+
+
+function fun1() {
+            // Retrieve booking ID from localStorage
+            const bookingId = localStorage.getItem("bookingId");
+
+            // Get values from inputs
+            let a = document.querySelector('#in1').value;
+            let b = document.querySelector('#in2').value;
+            let c = document.querySelector('#in3').value;
+            let d = document.querySelector('#in4').value;
+
+            // Display ticket details
+            document.querySelector('#heading').innerHTML = '<div><h1>Ticket</h1></div>';
+            document.querySelector('#name').innerHTML = "Name: " + a;
+            document.querySelector('#add').innerHTML = "Address: " + b;
+            document.querySelector('#num').innerHTML = "Contact Number: " + c;
+            document.querySelector('#age').innerHTML = "Age: " + d;
+
+            // Display booking ID if it exists
+            if (bookingId) {
+                document.getElementById("bid").innerHTML = "Booking Id: " + bookingId;
+            }
+            sendEmail();
+        }
+
+
+
+        window.onload = function() {
+            // Retrieve travel details from localStorage
+            const from = localStorage.getItem("fromStation");
+            const to = localStorage.getItem("toStation");
+            const date = localStorage.getItem("travelDate");
+            const time = localStorage.getItem("trainTime");
+            const totalAmount = localStorage.getItem("totalAmount");
+            const bookingHistory = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+    const mostRecentBooking = bookingHistory[bookingHistory.length - 1];
+    let bookedSeats = mostRecentBooking ? mostRecentBooking.seats : '';
+// Ensure that bookedSeats is an array (split the string if it's a comma-separated list)
+
+
+            // Display travel details
+            document.getElementById("from").textContent = 'From - '+ from || "N/A";
+            document.getElementById("to").textContent = "To - " + to || "N/A";
+            document.getElementById("date").textContent = "Date - " + date || "N/A";
+            document.getElementById("time").textContent = "Time - "+ time || "N/A";
+            document.getElementById("amount").textContent = totalAmount ? `Total Amount - $${totalAmount}` : "N/A";
+            if (typeof bookedSeats === 'string') {
+        bookedSeats = bookedSeats.split(',').map(seat => seat.trim()); // Split and trim each seat number
+    }
+            if (Array.isArray(bookedSeats) && bookedSeats.length > 0) {
+        document.getElementById("booked-seats-display").innerHTML = "Booked Seats: " + bookedSeats.join(", ");
+    } else {
+        document.getElementById("booked-seats-display").innerHTML = "No seats booked yet.";
+    }
+            
+        };
+
+        
+    </script>
+</body>
+
+</html>

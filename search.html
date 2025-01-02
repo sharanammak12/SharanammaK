@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greeny Ticket Booking - Seat Selection</title>
+    <link rel="icon" href=" train1.png" type="png">
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f0f4f8;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Page Title */
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3b8b18;
+            text-shadow: -1px 1px 2px #d9d9d9;
+            margin-bottom: 20px;
+        }
+
+        /* Train Search Form */
+        .train-search {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .train-search input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        .train-search button {
+            background-color: #3b8b18;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .train-search button:hover {
+            background-color: #2a9d8f;
+        }
+
+        /* Train Selection */
+        .train-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .train-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .train-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* Seat Selection Layout */
+        .seat-selection {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            max-width: 800px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .booked{
+        background-color: #1e6827; /* Selected Seat color */
+        color: white;
+    }
+
+        .seats-box, .summary-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .seat.booked {
+        background-color: #ff4d4d; /* Red for booked seats */
+        color: white;
+        cursor: not-allowed;
+    }
+    .seat:hover:not(.booked) {
+        transform: scale(1.1);
+    }
+
+        .seats-box {
+            flex: 2;
+            width: 100%;
+            
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .seat {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .lower-berth {
+            background-color: #ff8b94;
+        }
+
+        .middle-berth {
+            background-color: #a8e6cf;
+        }
+
+        .upper-berth {
+            background-color: #ffd54f;
+        }
+
+        .side-lower-berth {
+            background-color: #9fa8da;
+        }
+
+        .side-upper-berth {
+            background-color: #d1c4e9;
+        }
+
+        .seat:hover {
+            transform: scale(1.1);
+        }
+
+        .summary-box {
+            flex: 1;
+            text-align: center;
+        }
+
+        .proceed-button {
+            background-color: #3b8b18;
+            color: white;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .proceed-button:hover {
+            background-color: #2a9d8f;
+        }
+
+        /* Additional Styles for New Sections */
+        .section-title {
+            font-size: 1.8rem;
+            color: #3b8b18;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .history-container, .admin-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .booking-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .cancel-button {
+            background-color: #e57373;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cancel-button:hover {
+            background-color: #ef5350;
+        }
+
+        .generate-report-button {
+            background-color: #3b8b18;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .container{
+            height: 100%;
+        }
+
+        /* Cancellation Section */
+        .cancellation {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .cancellation input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .cancellation button {
+            background-color: #e57373;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cancellation button:hover {
+            background-color: #ef5350;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Your Seats</h1>
+
+        <!-- Train Search Form -->
+        <div class="train-search">
+            <input type="text" id="from" placeholder="From" />
+            <input type="text" id="to" placeholder="To" />
+            <input type="date" id="date" />
+            
+            <button onclick="searchTrains()">Search Trains</button>
+        </div>
+
+        <!-- Train List (Dynamically populated after search) -->
+        <div class="train-list" id="train-list"></div>
+
+        <!-- Seat Selection Section -->
+        <div class="seat-selection" id="seat-selection" style="display: none;">
+            <div class="seats-box" id="seats-box"></div>
+            <div class="summary-box">
+                <h2>Booking Summary</h2>
+                <p>Selected Seats: <span id="selected-seats-list">None</span></p>
+                <p>Total Amount: $<span id="total-amount">0</span></p>
+                <p>Booking ID: <span id="booking-id">None</span></p>
+                <div class="box">
+                    <img src="" id="img">
+                </div>
+                <button onclick="fun1()"
+                >Generate</button>
+            
+                <button class="proceed-button" onclick="proceedToPayment()">Proceed with Payment</button>
+            </div>
+              <!-- Cancellation Section -->
+        <!-- <div class="cancellation">
+            <h2>Cancel Booking</h2>
+            <input type="number" id="cancel-seat" placeholder="Enter seat number" />
+            <button onclick="cancelBooking()">Cancel Booking</button>
+        </div> -->
+        </div>
+     
+
+        <!-- Booking History Section -->
+        <h2 class="section-title">Booking History and Details</h2>
+        <div class="history-container" id="booking-history">
+            <button onclick="displayBookingHistory()">View Booking History</button>
+            <div id="booking-list"></div>
+        </div>
+
+        <!-- Admin Reports Section (visible to admin only) -->
+        <h2 class="section-title" id="admin-title" style="display: none;">Admin Reports and Analytics</h2>
+        <div class="admin-container" id="admin-container" style="display: none;">
+            <button class="generate-report-button" onclick="generateReport()">Generate Ticket Sales Report</button>
+            <div id="report-output"></div>
+        </div>
+    </div>
+
+  
+
+    <script>
+        let selectedTrain = null;
+        let trainSeats = [];
+    
+        const userEmail = localStorage.getItem("userEmail");
+        let train;
+        // Function to search for trains
+        function searchTrains() {
+            console.log("Search button clicked");
+    
+            const from = document.getElementById("from").value;
+            const to = document.getElementById("to").value;
+            const date = document.getElementById("date").value;
+    
+            // Validate inputs
+            if (!from || !to || !date) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+              // Get today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to 00:00:00 for accurate comparison
+
+    // Convert the selected date to a Date object
+    const selectedDate = new Date(date);
+
+    // Check if the selected date is in the past
+    if (selectedDate < today) {
+        alert("Please select a present or future date.");
+        return;
+    }
+    
+            // Store search data in localStorage for later use
+            localStorage.setItem("fromStation", from);
+            localStorage.setItem("toStation", to);
+            localStorage.setItem("travelDate", date);
+    
+            // Send API request to fetch train details
+            fetch(`/api/searchTrains?from=${from}&to=${to}&date=${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        displayTrains(data); // Display train data on the page
+                    } else {
+                        alert("No trains found for the given route.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching train data:", error);
+                    alert("Something went wrong while fetching the train data.");
+                });
+        }
+    
+        // Function to display trains on the page
+        function displayTrains(trains) {
+            const trainList = document.getElementById("train-list");
+            trainList.innerHTML = ''; // Clear previous results
+    
+            trains.forEach(train => {
+                const trainItem = document.createElement("div");
+                trainItem.classList.add("train-item");
+                trainItem.textContent = `${train.name} - Available Seats: ${train.availableSeats}, Timing: ${train.timing}`;
+                trainItem.onclick = () => selectTrain(train);
+                trainList.appendChild(trainItem);
+            });
+          
+        }
+       
+        // Function to select a train
+        function selectTrain(train) {
+            selectedTrain = train;
+           
+            
+
+             document.getElementById("seat-selection").style.display = "flex";
+             generateSeatLayout(train.availableSeats, train.bookedSeats || []); // Assuming `bookedSeats` is a list of booked seat indice
+
+             if (!train.bookedSeats) {
+                train.bookedSeats = [];
+            }
+
+
+              // Listen for seat selection updates and add them to the bookedSeats array
+    document.querySelectorAll(".seat").forEach((seatElement, index) => {
+        seatElement.addEventListener("click",  function () {
+            console.log(index);
+          
+            const seatIndex = index.toString(); // Ensure both are strings for comparison
+            const isAlreadyBooked = train.bookedSeats.includes(seatIndex);
+           
+
+            if (!isAlreadyBooked) {
+                // Mark seat as booked in UI
+                train.bookedSeats.push(seatIndex);
+              
+                console.log("Current bookedSeats array:", train.bookedSeats);
+
+                seatElement.classList.add("booked");
+            } else {
+                // Unmark the seat if deselected
+                train.bookedSeats = train.bookedSeats.filter(seat => seat !== seatIndex);
+              
+                seatElement.classList.remove("booked");
+            }
+
+
+             // Save updated booked seats to the database
+             updateBookedSeatsInDatabase(selectedTrain._id, train.bookedSeats);
+
+            console.log(`Updated booked seats for ${train.name}:`, train.bookedSeats);
+        });
+    });
+
+            //  generateSeatLayout(train.availableSeats, bookedSeats);
+             localStorage.setItem("trainTime", train.timing);
+            console.log(`Selected train: ${train.name}`);
+            console.log(`Selected train: ${train.timing}`);
+           
+        }
+
+
+        // Function to update booked seats in the database
+       async function updateBookedSeatsInDatabase(trainId, bookedSeats) {
+  
+    if (!selectedTrain) {
+        console.error("No train selected.");
+        return;
+    }
+
+    // const alreadyBookedSeats = selectedTrain.bookedSeats || []; 
+    // console.log("Already booked seats:", alreadyBookedSeats); 
+    // console.log("User selected seats:", bookedSeats); 
+    // Filter out already booked seats from the ones the user wants to book
+    // const availableSeats = bookedSeats.filter(seat => !alreadyBookedSeats.includes(seat));
+   
+    const requestData = {
+        trainId: trainId,
+        seats: bookedSeats.map(seat => parseInt(seat, 10)), // Make sure this is an array of seat numbers
+       
+    };
+
+    console.log("Request data:", requestData);  // Log the request payload to check before sending
+
+    try {
+        const response = await fetch(`http://localhost:3003/api/updateBookedSeats`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData), // Send data directly
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText);
+        }
+
+        const data = await response.json();
+        console.log("API response:", data);  // Log full response
+
+        if (data && data.success) {
+            console.log("Booked seats updated successfully in the database.");
+        } else {
+            console.error("Failed to update booked seats:", data.message || "Unknown error");
+        }
+    } catch (error) {
+        console.error("Error updating booked seats:", error);
+    }
+}
+
+    
+        // Function to generate seat layout
+        function generateSeatLayout(totalSeats, bookedSeats) {
+            const seatsBox = document.getElementById("seats-box");
+            seatsBox.innerHTML = '';
+            trainSeats = Array(totalSeats).fill(false);  // Initialize all seats as unselected
+    
+            const columns = 4; // Number of columns for seat layout
+            const rows = Math.ceil(totalSeats / columns); // Calculate number of rows
+    
+            for (let i = 0; i < rows; i++) {
+                const rowDiv = document.createElement("div");
+                rowDiv.classList.add("seat-row");
+    
+                for (let j = 0; j < columns; j++) {
+                    const seatIndex = i * columns + j;
+                    if (seatIndex < totalSeats) {
+                        const seat = document.createElement("div");
+                        seat.classList.add("seat", getBerthType(seatIndex));
+                        seat.textContent = seatIndex + 1;
+    
+                        // Mark booked seats
+                        if (bookedSeats.includes(seatIndex.toString())) {
+                            seat.classList.add("booked"); // Apply booked class
+                        } else {
+                            seat.onclick = () => toggleSeatSelection(seatIndex);
+                        }
+    
+                        rowDiv.appendChild(seat);
+                    }
+                }
+                seatsBox.appendChild(rowDiv);
+            }
+        }
+
+        function generateRandomBookingId() {
+    const prefix = "BOOK";
+    const randomId = Math.random().toString(36).substr(2, 9).toUpperCase(); // Random alphanumeric string
+    return `${prefix}-${randomId}`;
+}
+    
+        // Function to get berth type (just an example, can be extended)
+        function getBerthType(seatNumber) {
+            const berthTypes = ["lower-berth", "middle-berth", "upper-berth", "side-lower-berth", "side-upper-berth"];
+            return berthTypes[seatNumber % berthTypes.length];
+        }
+    
+        // Function to toggle seat selection
+        function toggleSeatSelection(seatIndex) {
+            trainSeats[seatIndex] = !trainSeats[seatIndex];
+            const seat = document.getElementById("seats-box").querySelectorAll(".seat")[seatIndex];
+    
+            if (trainSeats[seatIndex]) {
+                seat.classList.add("selected");
+            } else {
+                seat.classList.remove("selected");
+            }
+    
+            updateBookingSummary();
+        }
+    
+        
+       // Function to update booking summary
+function updateBookingSummary() {
+    const selectedSeats = trainSeats
+        .map((isSelected, index) => (isSelected ? index + 1 : null))
+        .filter(seat => seat !== null);
+        console.log("Selected seats:", selectedSeats);  // Debugging line
+    const pricePerSeat = selectedTrain.price; // Retrieve price from selectedTrain object
+    const totalAmount = selectedSeats.length * pricePerSeat;
+
+    const bookingId = generateRandomBookingId(); // Generate random booking ID
+
+    // Store booking details in localStorage
+    localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+    localStorage.setItem("totalAmount", totalAmount);
+    localStorage.setItem("bookingId", bookingId);
+
+    document.getElementById("selected-seats-list").textContent =
+        selectedSeats.join(", ") || "None";
+    document.getElementById("total-amount").textContent = totalAmount;
+    document.getElementById("booking-id").textContent = bookingId;
+}
+    
+        // Function to proceed with payment
+        function proceedToPayment() {
+          
+            alert("Payment processed successfully!");
+            saveBooking();
+           
+            const bookingId = document.getElementById("booking-id").textContent;
+            const totalAmount = document.getElementById("total-amount").textContent;
+            const selectedSeatsList = document.getElementById("selected-seats-list").textContent; // or use `selectedSeatsList` if it's an array
+
+            // Store the booking details in localStorage
+            const bookingHistory = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            const newBooking = {
+                bookingId,
+                seats: selectedSeatsList,
+                totalAmount,
+                date: new Date().toLocaleString()
+            };
+
+            bookingHistory.push(newBooking);
+            localStorage.setItem("bookingHistory", JSON.stringify(bookingHistory));
+
+
+            const redirectToTicketPage = () => {
+        window.location.href = "ticket.html";
+    };
+
+    setTimeout(redirectToTicketPage, 500); 
+           
+        }
+
+
+        function displayBookingHistory() {
+            const historyBox = document.getElementById("booking-history");
+            const bookingHistory = JSON.parse(localStorage.getItem("bookingList")) || [];
+
+            historyBox.innerHTML = "";
+            if (bookingHistory.length === 0) {
+                historyBox.innerHTML = "<p>No booking history available.</p>";
+                return;
+            }
+
+            bookingHistory.forEach((booking,index) => {
+                const bookingItem = document.createElement("div");
+                bookingItem.classList.add("booking-item");
+                bookingItem.innerHTML = `
+                    <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+                    <p><strong>Seats:</strong> ${booking.seats}</p>
+                    <p><strong>Total Amount:</strong> $${booking.amount}</p>
+                    <p><strong>Date:</strong> ${booking.date}</p>
+                     <button class="delete-booking" data-index="${index}">Delete</button>`;
+                  
+                historyBox.appendChild(bookingItem);
+
+                // Add event listener for delete button
+        const deleteButton = bookingItem.querySelector(".delete-booking");
+        deleteButton.addEventListener("click", () => deleteBooking(index));
+    });
+            
+
+            
+        }
+
+
+
+        // Function to delete booking from localStorage
+function deleteBooking(index) {
+    const bookingHistory = JSON.parse(localStorage.getItem("bookingList")) || [];
+    
+    // Remove the selected booking by its index
+    bookingHistory.splice(index, 1);
+
+    // Save the updated booking history back to localStorage
+    localStorage.setItem("bookingList", JSON.stringify(bookingHistory));
+
+    // Re-render the booking history to reflect the changes
+    displayBookingHistory();
+}
+
+       
+        // Function to save booking data
+        function saveBooking() {
+            const bookedSeats = trainSeats
+        .map((isSelected, index) => (isSelected ? index : null))
+        .filter(seat => seat !== null);
+
+        // Create a booking object
+    const bookingId = document.getElementById("booking-id").textContent;
+    const totalAmount = document.getElementById("total-amount").textContent;
+    const selectedSeatsList = bookedSeats.join(", ");
+
+     // Save booking details to the bookingList array in localStorage
+     const bookingList = JSON.parse(localStorage.getItem("bookingList")) || [];
+    bookingList.push({
+        train: selectedTrain.name,           // Train name
+        seats: selectedSeatsList,           // Selected seat list
+        amount: totalAmount,                // Total amount for booking
+        bookingId: bookingId,              // Booking ID
+        date: new Date().toLocaleString()   // Booking date (optional)
+    });
+    localStorage.setItem("bookingList", JSON.stringify(bookingList));
+    
+     // Store booked seats for the selected train in trainBookings
+     const trainBookings = JSON.parse(localStorage.getItem("trainBookings")) || {};
+    trainBookings[selectedTrain.name] = bookedSeats; // Store the booked seats for this specific train
+    localStorage.setItem("trainBookings", JSON.stringify(trainBookings));
+
+    console.log("Booking saved:", { 
+        bookingList, 
+        trainBookings 
+    }); 
+
+        }
+
+        
+// Fetch train details and call cancelBooking logic
+function cancelBooking() {
+    const seatToCancel = parseInt(document.getElementById('cancel-seat').value, 10);  
+
+    console.log('Seat to cancel:', seatToCancel);
+
+    
+    if (isNaN(seatToCancel) || seatToCancel < 1) {
+        alert('Please enter a valid seat number.');
+        return;
+    }
+
+
+    fetch('http://localhost:3003/api/trainDetails')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Train data:", data);
+            
+            if (!data || !data.bookedSeats) {
+                alert("Train data is not available.");
+                return;
+            }
+
+            
+            const bookedSeatsNumbers = data.bookedSeats.map(seat => parseInt(seat, 10));  
+            console.log('booked seats',bookedSeatsNumbers);
+          
+            const bookingIndex = bookedSeatsNumbers.indexOf(seatToCancel);
+
+            if (bookingIndex === -1) {
+                alert('This seat is not booked.');
+                return;
+            }
+
+            
+            data.bookedSeats.splice(bookingIndex, 1);  
+
+           
+            updateBookedSeatsInDatabase(data._id, data.bookedSeats)
+                .then(() => {
+                    alert(`Seat ${seatToCancel} has been canceled.`);
+                    renderSeats();  
+                })
+                .catch(error => {
+                    console.error('Failed to update the booking:', error);
+                    alert('There was an error canceling the booking. Please try again.');
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching train data:', error);
+            alert("Could not load train data.");
+        });
+}
+
+
+
+    
+        function fun1() {
+        // Get the img element by its ID
+        const imgElement = document.getElementById("img");
+        
+        // Set the src attribute to generate the QR code
+        imgElement.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent('Hi');
+    }
+    
+    </script>
+    
+    
+
+   
+</body>
+</html>
+

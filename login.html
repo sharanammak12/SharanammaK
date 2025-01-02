@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register - Greeny Ticket Booking</title>
+    <link rel="icon" href=" train1.png" type="png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #2a9d8f;
+            font-family: Arial, sans-serif;
+        }
+
+        .auth-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            box-shadow: 10px 10px 10px 4px rgb(41, 104, 98);
+        }
+
+        .auth-container h2 {
+            color: #3b8b18;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #e76f51;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #fea690;
+        }
+
+        .toggle-link {
+            margin-top: 15px;
+            color: #2a9d8f;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h2 id="form-title">Login</h2>
+
+        <!-- Login Form -->
+        <form id="login-form" method="POST">
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" name="username" required>
+
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="password" required>
+
+            <button type="submit">Login</button>
+            <p class="toggle-link" onclick="toggleForm()">Don't have an account? Register here</p>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" method="POST" style="display: none;">
+            <label for="register-username">Username:</label>
+            <input type="text" id="register-username" name="username" required>
+
+            <label for="register-email">Email:</label>
+            <input type="email" id="register-email" name="email" required>
+
+            <label for="register-password">Password:</label>
+            <input type="password" id="register-password" name="password" required>
+
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+
+            <button type="submit">Register</button>
+            <p class="toggle-link" onclick="toggleForm()">Already have an account? Login here</p>
+        </form>
+    </div>
+
+    <script>
+        // Toggle between login and register forms
+        function toggleForm() {
+            const loginForm = document.getElementById("login-form");
+            const registerForm = document.getElementById("register-form");
+            const formTitle = document.getElementById("form-title");
+    
+            if (loginForm.style.display === "none") {
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                formTitle.textContent = "Login";
+            } else {
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                formTitle.textContent = "Register";
+            }
+        }
+    
+        // Handle login form submission
+        document.getElementById("login-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+    
+            const username = document.getElementById("login-username").value.trim();
+            const password = document.getElementById("login-password").value.trim();
+    
+            if (!username || !password) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+    
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password }),
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(errorData.message || "Invalid username or password. Please try again.");
+                    return;
+                }
+    
+                const result = await response.json();
+                alert("Login successful!");
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("username", result.username);
+                window.location.href = "/search.html"; // Redirect after successful login
+            } catch (error) {
+                console.error("Error logging in:", error);
+                alert("Something went wrong. Please try again later.");
+            }
+        });
+    
+        // Handle register form submission
+        document.getElementById("register-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+    
+            const username = document.getElementById("register-username").value.trim();
+            const email = document.getElementById("register-email").value.trim();
+            const password = document.getElementById("register-password").value.trim();
+            const confirmPassword = document.getElementById("confirm-password").value.trim();
+    
+            if (!username || !email || !password || !confirmPassword) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+    
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+    
+            try {
+                const response = await fetch("/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, email, password }),
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(errorData.message || "Registration failed. Please try again.");
+                    return;
+                }
+    
+                const result = await response.json();
+                alert("Registration successful! Please log in.");
+                localStorage.setItem("userEmail", email);
+                toggleForm(); // Switch to the login form after successful registration
+            } catch (error) {
+                console.error("Error registering:", error);
+                alert("Something went wrong. Please try again later.");
+            }
+        });
+    </script>
+    
+</body>
+
+</html>

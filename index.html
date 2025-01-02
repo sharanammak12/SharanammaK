@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greeny Ticket Booking</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href=" train1.png" type="png">
+   
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+@keyframes slideBackground {
+    0% {
+        background-image: url('train-background.jpg');
+    }
+    33% {
+        background-image: url('image2.png');
+    }
+    66% {
+        background-image: url('image5.png');
+    }
+    100% {
+        background-image: url('image4.png');
+    }
+}
+
+.main {
+    position: relative;
+    background-size: cover;
+    height: 900px;
+    width: 100%;
+    animation: slideBackground 5s infinite; /* Animation lasts 5 seconds and repeats infinitely */
+    background-position: center;
+    transition: background-image 1s ease-in-out; /* Smooth transition for image change */
+}
+
+/* Optional: Adjust text visibility for the background images */
+.hero {
+    flex: 1;
+    text-align: center;
+    color: white;
+    padding: 80px 20px;
+}
+
+.cta-button {
+    background-color: #e76f51;
+    color: white;
+    padding: 15px 25px;
+    font-size: 1.2em;
+    margin-top: 20px;
+    display: inline-block;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.cta-button:hover {
+    background-color: #fea690;
+}
+
+
+h1 {
+    color: #3b8b18;
+    font-weight: bolder;
+    font-size: xx-large;
+    text-shadow: -2px 2px 2px white;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #2a9d8f;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 25px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 8px;
+    background-color: #5fb9ae;
+    color: white;
+    width: 100%;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    text-shadow: 5px 9px 7px rgb(41, 104, 98);
+}
+
+.navbar .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.navbar img {
+    height: 2cm;
+    border-radius: 15px;
+    margin-left: -19px;
+}
+
+.hero {
+    flex: 1;
+    background: url('train-background.jpg') center / cover no-repeat;
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.cta-button {
+    background-color: #e76f51;
+    color: white;
+    padding: 15px 25px;
+    font-size: 1.2em;
+    margin-top: 20px;
+    display: inline-block;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.cta-button:hover {
+    background-color: #fea690;
+}
+
+.offers {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.offer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.offer {
+    width: 250px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.offer img {
+    height: 0.5cm;
+    width: 0.5cm;
+}
+
+.offer:hover {
+    width: 300px;
+}
+
+footer {
+    background-color: #2a9d8f;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.main {
+    position: relative;
+    background-size: cover;
+    height: 900px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1514250609276-c577268ef8fb?q=80&w=1970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center / cover;
+    filter: blur(3px);
+    z-index: -1;
+}
+
+.nav-links li a:hover {
+    color: #357160;
+}
+
+h2 {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 60px 10px;
+    }
+
+    .navbar .nav-links {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .navbar img {
+        height: 1.5cm;
+    }
+
+    .cta-button {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+
+    .offer-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .offer {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    footer {
+        padding: 20px 10px;
+    }
+}
+
+   
+</style>
+
+    <body>
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <img src="\images-removebg-preview.png" alt="Logo" class="logo" />
+            <ul class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/login.html">Login</a></li>
+                <li><a href="https://www.google.com/maps/dir/15.8161118,74.489917//@15.8161079,74.4487169,13z/data=!3m1!4b1!4m5!4m4!1m1!4e1!1m0!3e3?entry=ttu&g_ep=EgoyMDI0MTIxMS4wIKXMDSoASAFQAw%3D%3D" onclick="map()">Location</a></li>
+                <li><a href="#" id="search-link" onclick="checkAuthentication()">Search Trains</a></li>
+                <!-- <li><a href="/search.html">Search Trains</a></li> -->
+                <li><a href="#off">Offers</a></li>
+                <li><a href="/help.html">Help</a></li>
+                <li><a href="/admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    
+    <div class="main">
+        <!-- Home Section -->
+        <section class="hero">
+            <h1>Welcome to Greeny Ticket Booking</h1>
+            <p >Book tickets easily and travel comfortably with us!</p>
+            <a href="#" id="cta-search" class="cta-button" onclick="checkAuthentication()">Search Trains</a>
+            <!-- <a href="search.html" class="cta-button">Search Trains</a> -->
+        </section>
+    
+        <!-- Offers Section -->
+        <section class="offers" id="off">
+            <h2>Current Offers</h2>
+            <div class="offer-container">
+                <div class="offer">
+                    <img src="https://cdn2.iconfinder.com/data/icons/boxicons-solid-vol-2/24/bxs-offer-512.png" alt="Discount Offer" />
+                    <p>20% off on all tickets this month!</p>
+                </div>
+                <div class="offer">
+                    <img src="https://cdn2.iconfinder.com/data/icons/boxicons-solid-vol-2/24/bxs-offer-512.png" alt="Special Offer" />
+                    <p>Special discounts for students and seniors!</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+   
+    <!-- Footer -->
+    <footer id="con">
+        <p>&copy; 2024 Greeny Ticket Booking. All rights reserved.</p>
+    </footer>
+    
+    <script >
+
+        function map()
+        {
+            alert('Turn On Location');
+        }
+         // Redirect user to login if not authenticated
+         function checkAuthentication() {
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    if (loggedInUser) {
+        window.location.href = "search.html"; // Redirect to search page if logged in
+    } else {
+        alert("Please log in to access the Search Trains page.");
+        window.location.href = "login.html"; // Redirect to login page
+    }
+}
+
+
+ // Function to handle login form submission
+ function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem("loggedInUser", data.username); // Store username in local storage
+                    alert("Login successful!");
+                    window.location.href = "search.html"; // Redirect to search page
+                } else {
+                    alert(data.message); // Show error message
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to handle registration form submission
+        function handleRegister(event) {
+            event.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = "login.html"; // Redirect to login page after successful registration
+                } else {
+                    alert(data.message); // Show error message
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+
+       
+    </script>
+    </body>
+    </html>
+    
